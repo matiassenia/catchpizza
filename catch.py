@@ -13,10 +13,12 @@ c = Canvas(root, width=canvas_width, height=canvas_height)
 c.pack()
 
 # Cargar la imagen de fondo
-bg_image = Image.open("img/bg-pizzeria.jpg")
-bg_image = bg_image.resize((canvas_width, canvas_height), Image.ANTIALIAS)
+bg_image = Image.open("img/bg-pizzeria.jpeg")
+bg_image = bg_image.resize((canvas_width, canvas_height))
 bg_photo = ImageTk.PhotoImage(bg_image)
 c.create_image(0, 0, image=bg_photo, anchor='nw')
+
+
 
 
 
@@ -49,10 +51,10 @@ score_text = c.create_text(10, 10, anchor="nw", font=game_font, fill="darkblue",
 lives_remaining = 3
 lives_text = c.create_text(canvas_width-10, 10, anchor="ne", font=game_font, fill="darkblue", text="Lives: "+ str(lives_remaining))
 
-#Lista para los huevos
+#Lista para las pizzas
 eggs = []
 
-#Funcion para crear huevos
+#Funcion para crear pizzas
 def create_egg():
     x = randrange(10, 740)
     y = 40
@@ -60,6 +62,7 @@ def create_egg():
     eggs.append(new_egg)
     root.after(egg_interval, create_egg)
 
+#Funcion para mover los huevos
 def move_eggs():
     for egg in eggs:
         (eggx, eggy, eggx2, eggy2) = c.coords(egg)
@@ -68,6 +71,7 @@ def move_eggs():
             egg_dropped(egg)
     root.after(egg_speed, move_eggs)
 
+#Funcion para manejar huevos caídos
 def egg_dropped(egg):
     eggs.remove(egg)
     c.delete(egg)
@@ -76,11 +80,13 @@ def egg_dropped(egg):
         messagebox.showinfo("Game Over!", "Final Score: "+ str(score))
         root.destroy()
 
+#Funcion para restar una vida
 def lose_a_life():
     global lives_remaining
     lives_remaining -= 1
     c.itemconfigure(lives_text, text="Lives: "+ str(lives_remaining))
 
+#Funcion para verificar si la cesta atrapó una pizza
 def check_catch():
     (catcherx, catchery, catcherx2, catchery2) = c.coords(catcher)
     for egg in eggs:
@@ -91,6 +97,7 @@ def check_catch():
             increase_score(egg_score)
     root.after(100, check_catch)
 
+#funcion para aumentar la puntuación
 def increase_score(points):
     global score, egg_speed, egg_interval
     score += points
@@ -98,6 +105,7 @@ def increase_score(points):
     egg_interval = int(egg_interval * difficulty)
     c.itemconfigure(score_text, text="Score: "+ str(score))
 
+# Funciones para mover la cesta a la izquierda y derecha
 def move_left(event):
     (x1, y1, x2, y2) = c.coords(catcher)
     if x1 > 0:
@@ -108,6 +116,7 @@ def move_right(event):
     if x2 < canvas_width:
         c.move(catcher, 20, 0)
 
+# Configuración de eventos y bucles del juego
 c.bind("<Left>", move_left)
 c.bind("<Right>", move_right)
 c.focus_set()
