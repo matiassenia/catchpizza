@@ -18,14 +18,16 @@ bg_image = bg_image.resize((canvas_width, canvas_height))
 bg_photo = ImageTk.PhotoImage(bg_image)
 c.create_image(0, 0, image=bg_photo, anchor='nw')
 
+#Tamaño de las pizzas
+pizza_width = 70
+pizza_height = 65
 
+#cargar imagen de las pizzas
+pizza_image = Image.open("img/pizza-img.png")
+pizza_image = pizza_image.resize((pizza_width, pizza_height))
+pizza_photo = ImageTk.PhotoImage(pizza_image)
 
-
-
-# Colores de los huevos y variables del juego
-color_cycle = cycle(["light blue", "light green", "light pink", "light yellow", "light cyan"])
-egg_width = 45
-egg_height = 55
+#Variables del juego
 egg_score = 10
 egg_speed = 500
 egg_interval = 4000
@@ -47,7 +49,6 @@ game_font.config(size=18)
 # Puntuación y vidas
 score = 0
 score_text = c.create_text(10, 10, anchor="nw", font=game_font, fill="darkblue", text="Score: "+ str(score))
-
 lives_remaining = 3
 lives_text = c.create_text(canvas_width-10, 10, anchor="ne", font=game_font, fill="darkblue", text="Lives: "+ str(lives_remaining))
 
@@ -58,20 +59,20 @@ eggs = []
 def create_egg():
     x = randrange(10, 740)
     y = 40
-    new_egg = c.create_oval(x, y, x+egg_width, y+egg_height, fill=next(color_cycle), width=0)
+    new_egg = c.create_image(x, y, image=pizza_photo, anchor="nw")
     eggs.append(new_egg)
     root.after(egg_interval, create_egg)
 
-#Funcion para mover los huevos
+#Funcion para mover las pizzas
 def move_eggs():
     for egg in eggs:
-        (eggx, eggy, eggx2, eggy2) = c.coords(egg)
+        (eggx, eggy) = c.coords(egg)
         c.move(egg, 0, 10)
-        if eggy2 > canvas_height:
+        if eggy > canvas_height:
             egg_dropped(egg)
     root.after(egg_speed, move_eggs)
 
-#Funcion para manejar huevos caídos
+#Funcion para manejar pizzas caídas
 def egg_dropped(egg):
     eggs.remove(egg)
     c.delete(egg)
@@ -90,8 +91,8 @@ def lose_a_life():
 def check_catch():
     (catcherx, catchery, catcherx2, catchery2) = c.coords(catcher)
     for egg in eggs:
-        (eggx, eggy, eggx2, eggy2) = c.coords(egg)
-        if catcherx < eggx and eggx2 < catcherx2 and catchery2 - eggy2 < 40:
+        (eggx, eggy,) = c.coords(egg)
+        if catcherx < eggx < catcherx2 and catchery2 - eggy < 40:
             eggs.remove(egg)
             c.delete(egg)
             increase_score(egg_score)
