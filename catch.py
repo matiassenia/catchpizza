@@ -50,78 +50,94 @@ pizza_speed = 500
 pizza_interval = 4000
 difficulty = 0.95
 
-
 #Fuente para puntuación y vidas
-game_font = font.nametofont("TkFixedFont")
-game_font.config(size=25)
-
+game_font = ("Helvetica", 25, "bold")
+score_color = "Yellow"
+lives_color = "yellow"
 
 #Puntuación y vidas
 score = 0
-score_text = c.create_text(10, 10, anchor="nw", font=game_font, fill="darkblue", text="Score: "+ str(score))
+score_text = c.create_text(10, 10, anchor="nw", font=game_font, fill=score_color, text="Score: "+ str(score))
 lives_remaining = 3
-lives_text = c.create_text(canvas_width-10, 10, anchor="ne", font=game_font, fill="darkblue", text="Lives: "+ str(lives_remaining))
+lives_text = c.create_text(canvas_width-10, 10, anchor="ne", font=game_font, fill=score_color, text="Lives: "+ str(lives_remaining))
 
 #Lista para las pizzas
 pizzas = []
 
 #Funcion para crear pizzas
 def create_pizza():
-    x = randrange(10, 740)
-    y = 40
-    new_pizza = c.create_image(x, y, image=pizza_photo, anchor="nw")
-    pizzas.append(new_pizza)
-    root.after(pizza_interval, create_pizza)
+    if c:     
+        x = randrange(10, 740)
+        y = 40
+        new_pizza = c.create_image(x, y, image=pizza_photo, anchor="nw")
+        pizzas.append(new_pizza)
+        root.after(pizza_interval, create_pizza)
 
 #Funcion para mover las pizzas
 def move_pizzas():
-    (catcherx, catchery) = c.coords(catcher)
-    catcherx2 = catcherx + catcher_width
-    catchery2 = catchery + catcher_height
-    
-    for pizza in pizzas:
-        (pizzax, pizzay) = c.coords(pizza)
-        c.move(pizza, 0, 10)
-        if pizzay > canvas_height:
-            pizza_dropped(pizza)
-        elif catcherx < pizzax < catcherx2 and catchery < pizzay < catchery2: 
-            pizza_caught(pizza)
-    root.after(pizza_speed, move_pizzas)
+    if c:
+        for pizza in pizzas:
+            try:
+                (pizzax, pizzay) = c.coords(pizza)
+            except:
+                continue
+            c.move(pizza, 0, 10)
+            if pizzay > canvas_height:
+                pizza_dropped(pizza)
+            else:
+                try:
+                    (catcherx, catchery) = c.coords(catcher)
+                    catcherx2 = catcherx + catcher_width
+                    catchery2 = catchery + catcher_height    
+                    if catcherx < pizzax < catcherx2 and catchery < pizzay < catchery2:
+                        pizza_caught(pizza)  
+                except:
+                    continue
+    root.after(pizza_speed, move_pizzas)        
+        
 
 #Funcion para manejar pizzas atrapadas
 def pizza_caught(pizza):
-    pizzas.remove(pizza)
-    c.delete(pizza)
-    increase_score(pizza_score)
+    if pizza in pizzas:
+        pizzas.remove(pizza)
+        c.delete(pizza)
+        increase_score(pizza_score)
 
 #Funcion para manejar pizzas caídas
 def pizza_dropped(pizza):
-    pizzas.remove(pizza)
-    c.delete(pizza)
-    lose_a_life()
-    if lives_remaining == 0:
-        messagebox.showinfo("Game Over!", "Final Score: "+ str(score))
-        root.destroy()
+    if pizza in pizzas:
+        pizzas.remove(pizza)
+        c.delete(pizza)
+        lose_a_life()
+        if lives_remaining == 0:
+            messagebox.showinfo("Game Over!", "Final Score: "+ str(score))
+            root.destroy()
 
 #Funcion para restar una vida
 def lose_a_life():
     global lives_remaining
     lives_remaining -= 1
-    c.itemconfigure(lives_text, text="Lives: "+ str(lives_remaining))
+    c.itemconfigure(lives_text, text="Lives: " + str(lives_remaining))
 
 #Funcion para verificar si la cesta atrapó una pizza
 def check_catch():
-    (catcherx, catchery) = c.coords(catcher)
-    catcherx2 = catcherx + catcher_width
-    catchery2 = catchery + catcher_height
-    for pizza in pizzas:
-        (pizzax, pizzay,) = c.coords(pizza)
-        pizzax2 = pizzax + pizza_width
-        pizzay2 = pizzay + pizza_height
-        if catcherx == pizzax == catcherx2 and catchery == pizzax2 == catchery2:
-            pizzas.remove(pizza)
-            c.delete(pizza)
-            increase_score(pizza_score)
+    try:
+        (catcherx, catchery) = c.coords(catcher)
+        catcherx2 = catcherx + catcher_width
+        catchery2 = catchery + catcher_height
+        for pizza in pizzas:
+            try:
+                (pizzax, pizzay,) = c.coords(pizza)
+                pizzax2 = pizzax + pizza_width
+                pizzay2 = pizzay + pizza_height
+                if catcherx < pizzax < catcherx2 and catchery < pizzax2 < catchery2:
+                    pizzas.remove(pizza)
+                    c.delete(pizza)
+                    increase_score(pizza_score)
+            except:
+                continue
+    except:
+        pass                
     root.after(100, check_catch)
 
 #funcion para aumentar la puntuación
@@ -134,14 +150,22 @@ def increase_score(points):
 
 # Funciones para mover la cesta a la izquierda y derecha
 def move_left(event):
-    (x1, y1) = c.coords(catcher)
-    if x1 > 0:
-        c.move(catcher, -20, 0)
+    if c:
+        try:    
+            (x1, y1) = c.coords(catcher)
+        except:
+            return    
+        if x1 > 0:
+                c.move(catcher, -20, 0)
 
 def move_right(event):
-    (x1, y1) = c.coords(catcher)
-    if x1< canvas_width:
-        c.move(catcher, 20, 0)
+    if c:
+        try:
+            (x1, y1) = c.coords(catcher)
+        except:
+            return    
+        if x1 + catcher_width < canvas_width:
+            c.move(catcher, 20, 0)
 
 # Configuración de eventos y bucles del juego
 c.bind("<Left>", move_left)
