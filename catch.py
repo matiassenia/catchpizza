@@ -27,8 +27,8 @@ pizza_image = pizza_image.resize((pizza_width, pizza_height))
 pizza_photo = ImageTk.PhotoImage(pizza_image)
 
 # Tamaño de la cesta
-catcher_width = 100
-catcher_height = 100
+catcher_width = 120
+catcher_height = 120
 
 # Cargar imagen de la cesta
 catcher_image = Image.open("img/me-img.png")
@@ -61,6 +61,30 @@ lives_text = c.create_text(canvas_width - 10, 10, anchor="ne", font=game_font, f
 
 # Lista para las pizzas
 pizzas = []
+
+# Función para reiniciar el juego
+def restart_game():
+    global score, lives_remaining, pizzas, pizza_speed, pizza_interval
+    score = 0
+    lives_remaining = 3
+    pizza_speed = 500
+    pizza_interval = 4000
+    c.itemconfigure(score_text, text="Score: " + str(score))
+    c.itemconfigure(lives_text, text="Lives: " + str(lives_remaining))
+    for pizza in pizzas:
+        c.delete(pizza)
+    pizzas = []
+    root.after(1000, create_pizza)
+    root.after(1000, move_pizzas)
+    root.after(1000, check_catch)
+
+# Función para mostrar el mensaje de game over y preguntar si se quiere jugar de nuevo
+def game_over():
+    answer = messagebox.askyesno("Game Over", "Final Score: " + str(score) + "\nDo you want to play again?")
+    if answer:
+        restart_game()
+    else:
+        root.destroy()
 
 # Función para crear pizzas
 def create_pizza():
@@ -107,8 +131,7 @@ def pizza_dropped(pizza):
         c.delete(pizza)
         lose_a_life()
         if lives_remaining == 0:
-            messagebox.showinfo("Game Over!", "Final Score: " + str(score))
-            root.destroy()
+            game_over()
 
 # Función para restar una vida
 def lose_a_life():
