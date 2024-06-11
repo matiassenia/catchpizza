@@ -17,9 +17,10 @@ Gimme Gimme Pizza es un juego simple desarrollado en Python utilizando la biblio
 
 ## Cómo jugar
 1. Ejecuta el script `catch.py` con Python.
-   ´´´ bash
+```
+       bash
        python3 catch.py
-   ´´´
+```
 3. Controla la cesta utilizando las teclas de flecha izquierda y derecha para moverla horizontalmente.
 4. Atrapa las pizzas que caen de la parte superior de la pantalla con la cesta.
 5. Evita que las pizzas caigan al suelo sin ser atrapadas por la cesta.
