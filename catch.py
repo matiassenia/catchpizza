@@ -7,7 +7,7 @@ canvas_width = 800
 canvas_height = 500
 
 root = Tk()
-root.title("Pizza Catcher")
+root.title("Gimme Gimme Pizzas!")
 c = Canvas(root, width=canvas_width, height=canvas_height)
 c.pack()
 
