@@ -30,3 +30,36 @@ Gimme Gimme Pizza es un juego simple desarrollado en Python utilizando la biblio
 
 ## Contribución
 Si quieres contribuir a este proyecto, puedes hacerlo abriendo un pull request. Si tienes ideas para nuevas características, mejoras en el juego o correcciones de errores, ¡estamos abiertos a sugerencias!
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+## Description
+Gimme Gimme Pizza is a simple game developed in Python using the Tkinter library for the graphical interface and the PIL (Python Imaging Library) for image manipulation. In this game, the player controls a basket with the goal of catching pizzas that fall from the top of the screen. Each time the player catches a pizza, they earn points. However, if a pizza falls to the ground without being caught by the basket, the player loses a life. The game ends when the player loses all their lives.
+
+## Features
+- Simple and user-friendly graphical interface.
+- High-quality images for pizzas and the basket.
+- Score and life counter to track the player's progress.
+- The speed of the pizzas increases over time, adding to the game's difficulty.
+- Precise collision detection system to determine if a pizza is caught by the basket.
+
+## Requirements
+- Python 3.x installed on your system.
+- Tkinter library included in the standard Python installation.
+- PIL (Python Imaging Library) for image manipulation. You can install it using `pip install pillow`.
+
+## How to Play
+1. Run the `catch.py` script with Python.
+    ```bash
+    python3 catch.py
+    ```
+2. Control the basket using the left and right arrow keys to move it horizontally.
+3. Catch the pizzas falling from the top of the screen with the basket.
+4. Avoid letting the pizzas fall to the ground without being caught by the basket.
+5. Earn points for each pizza caught and try to achieve the highest possible score.
+6. Lose a life each time a pizza falls to the ground without being caught.
+7. The game ends when you lose all your lives. Good luck!
+
+## Contribution
+If you want to contribute to this project, you can do so by opening a pull request. If you have ideas for new features, game improvements, or bug fixes, we are open to suggestions!
+
